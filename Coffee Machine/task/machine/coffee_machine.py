@@ -1,24 +1,65 @@
 # Write your code here
-print("Write how many ml of water the coffee machine has:")
-water = int(input())
-print("Write how many ml of milk the coffee machine has:")
-milk = int(input())
-print("Write how many grams of coffee beans the coffee machine has:")
-beans = int(input())
-print("Write how many cups of coffee you will need:")
-cups = int(input())
-cups_available = 0
-while water >= 200 and milk >= 50 and beans >= 15:
-    cups_available += 1
-    water = water - 200
-    milk = milk - 50
-    beans = beans - 15
-if cups == cups_available:
-    print("Yes, I can make that amount of coffee")
-elif cups_available > cups:
-    extra = cups_available - cups
-    print("Yes, I can make that amount of coffee (and even {} more than that)".format(extra))
+
+def give_status(state):
+    print("The coffee machine has:")
+    print("{} of water".format(state.get("water")))
+    print("{} of milk".format(state.get("milk")))
+    print("{} of coffee beans".format(state.get("beans")))
+    print("{} of disposable cups".format(state.get("discups")))
+    print("{} of money".format(state.get("money")))
+    
+    
+def buy(state):
+    print("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:")
+    drink_choice = input()
+    state["discups"] = state.get("discups") - 1
+    if drink_choice == "1":
+        state["water"] = state.get("water") - 250
+        state["beans"] = state.get("beans") - 16
+        state["money"] = state.get("money") + 4
+    elif drink_choice == "2":
+        state["water"] = state.get("water") - 350
+        state["milk"] = state.get("milk") - 75
+        state["beans"] = state.get("beans") - 20
+        state["money"] = state.get("money") + 7
+    else:
+        state["water"] = state.get("water") - 200
+        state["milk"] = state.get("milk") - 100
+        state["beans"] = state.get("beans") - 12
+        state["money"] = state.get("money") + 6
+    
+        
+def fill(state):
+    print("Write how many ml of water do you want to add:")
+    state["water"] = state.get("water") + int(input())
+    print("Write how many ml of milk do you want to add:")
+    state["milk"] = state.get("milk") + int(input())
+    print("Write how many grams of coffee beans do you want to add:")
+    state["beans"] = state.get("beans") + int(input())
+    print("Write how many disposable cups of coffee do you want to add:")
+    state["discups"] = state.get("discups") + int(input())
+    
+    
+def take(state):
+    print("I gave you ${}".format(state.get("money")))
+    state["money"] = 0
+
+
+state = {
+    'money' : 550,
+    'water' : 400,
+    'milk' : 540,
+    'beans' : 120,
+    'discups' : 9
+}
+give_status(state)
+print("Write action (buy, fill, take):")
+choice = input()
+if choice == "buy":
+    buy(state)
+elif choice == "fill":
+    fill(state)
 else:
-    print("No, I can make only {} cups of coffee".format(cups_available))
-    
-    
+    take(state)
+give_status(state)
+
