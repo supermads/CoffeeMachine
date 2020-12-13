@@ -10,23 +10,58 @@ def give_status(state):
     
     
 def buy(state):
-    print("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:")
+    d = state.get("discups")
+    w = state.get("water")
+    m = state.get("milk")
+    b = state.get("beans")
+    mo = state.get("money")
+    print("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:")
     drink_choice = input()
-    state["discups"] = state.get("discups") - 1
-    if drink_choice == "1":
-        state["water"] = state.get("water") - 250
-        state["beans"] = state.get("beans") - 16
-        state["money"] = state.get("money") + 4
-    elif drink_choice == "2":
-        state["water"] = state.get("water") - 350
-        state["milk"] = state.get("milk") - 75
-        state["beans"] = state.get("beans") - 20
-        state["money"] = state.get("money") + 7
+    if d < 1:
+        print("Sorry, not enough disposable cups!")
     else:
-        state["water"] = state.get("water") - 200
-        state["milk"] = state.get("milk") - 100
-        state["beans"] = state.get("beans") - 12
-        state["money"] = state.get("money") + 6
+        if drink_choice == "1":
+            if w >= 250 and b >= 16:
+                print("I have enough resources, making you a coffee!")
+                state["discups"] = d - 1
+                state["water"] = w - 250
+                state["beans"] = b - 16
+                state["money"] = mo + 4
+            else:
+                if w < 250:
+                    print("Sorry, not enough water!")
+                else:
+                    print("Sorry, not enough coffee beans!")
+        elif drink_choice == "2":
+            if w >= 350 and b >= 20 and m >= 75:
+                print("I have enough resources, making you a coffee!")
+                state["discups"] = d - 1
+                state["water"] = w - 350
+                state["milk"] = m - 75
+                state["beans"] = b - 20
+                state["money"] = mo + 7
+            else:
+                if w < 350:
+                    print("Sorry, not enough water!")
+                elif m < 75:
+                    print("Sorry, not enough water!")
+                else:
+                    print("Sorry, not enough coffee beans!")
+        elif drink_choice == "3":
+            if w >= 200 and m >= 100 and b >= 12:
+                print("I have enough resources, making you a coffee!")
+                state["discups"] = d - 1
+                state["water"] = w - 200
+                state["milk"] = m - 100
+                state["beans"] = b - 12
+                state["money"] = mo + 6
+            else:
+                if w < 200:
+                    print("Sorry, not enough water!")
+                elif m < 100:
+                    print("Sorry, not enough water!")
+                else:
+                    print("Sorry, not enough coffee beans!")
     
         
 def fill(state):
@@ -45,6 +80,22 @@ def take(state):
     state["money"] = 0
 
 
+def menu(state, keep_running):   
+    while keep_running:
+        print("Write action (buy, fill, take, remaining, exit):")
+        choice = input()
+        if choice == "buy":
+            buy(state)
+        elif choice == "fill":
+            fill(state)
+        elif choice == "take":
+            take(state)
+        elif choice == "remaining":
+            give_status(state)
+        else:
+            keep_running = False
+        
+        
 state = {
     'money' : 550,
     'water' : 400,
@@ -52,14 +103,7 @@ state = {
     'beans' : 120,
     'discups' : 9
 }
-give_status(state)
-print("Write action (buy, fill, take):")
-choice = input()
-if choice == "buy":
-    buy(state)
-elif choice == "fill":
-    fill(state)
-else:
-    take(state)
-give_status(state)
+keep_running = True
+menu(state, keep_running)
+
 
